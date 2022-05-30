@@ -14,7 +14,7 @@ class Profile(models.Model):
     available = models.BooleanField(default=True)
 
 
-class Friends(models.Model):
+class Friend(models.Model):
     profile1 = models.ForeignKey(Profile, related_name='profile1', on_delete=models.CASCADE)
     profile2 = models.ForeignKey(Profile, related_name='profile2', on_delete=models.CASCADE)
 
