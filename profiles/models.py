@@ -22,7 +22,7 @@ class Friend(models.Model):
         if self.profile1 == self.profile2:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
-            super(Friends, self).save(*args, **kwargs)
+            super(Friend, self).save(*args, **kwargs)
 
     def __str__(self):
         return "{}-{}".format(self.profile1, self.profile2)
