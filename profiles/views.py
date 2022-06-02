@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters
 from rest_framework import status
@@ -27,7 +28,8 @@ class FriendsView(viewsets.ModelViewSet):
     def create(self, request):
         try:
             if request.data['profile1'] == request.data['profile2'] or Friends.objects.filter(
-                    profile1=request.data['profile1'], profile2=request.data['profile2']):
+                    Q(profile1=request.data['profile1'], profile2=request.data['profile2'])) or Friends.objects.filter(
+                             Q(profile1=request.data['profile2'], profile2=request.data['profile1'])):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             return super(FriendsView, self).create(request)
         except Exception as e:
