@@ -9,5 +9,5 @@ router.register(r'profile', views.ProfileView, basename='Profile')
 
 
 profile_patterns = [
-    path(r"friends/profile/<int:profile_id>/", views.FriendsView.as_view({'get': 'profile'}))
+    path(r"friends/profile/<int:profile_id>/", views.FriendsView.as_view({'get': 'profile_friends'}))
                    ] + router.urls
