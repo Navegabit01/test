@@ -1,4 +1,4 @@
-from django.db.models import Q, Value as V, CharField
+from django.db.models import Q, Value, CharField
 from django.db.models.functions import Concat
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters
@@ -29,23 +29,26 @@ class FriendsView(viewsets.ModelViewSet):
     def create(self, request):
         try:
             if request.data['profile1'] == request.data['profile2'] or Friends.objects.filter(
-                    Q(profile1=request.data['profile1'], profile2=request.data['profile2'])) or Friends.objects.filter(
-                             Q(profile1=request.data['profile2'], profile2=request.data['profile1'])):
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                    Q(
+                        profile1=request.data['profile1'],
+                        profile2=request.data['profile2'])
+            ) or Friends.objects.filter(
+                             Q(
+                                 profile1=request.data['profile2'],
+                                 profile2=request.data['profile1'])
+            ):
+                return Response(status=status.HTTP_400_BAD_REQUEST, error="This convination exist")
             return super(FriendsView, self).create(request)
         except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST, error=str(e))
 
     def profile_friends(self, request, profile_id=None):
         try:
             data = Friends.objects.annotate(
-                knows=Concat('profile1__first_name', V(' knows '), 'profile2__first_name', output_file=CharField())
+                knows=Concat('profile1__first_name', Value(' knows '), 'profile2__first_name', output_file=CharField())
             ).filter(
                 Q(profile1=profile_id) | Q(profile2=profile_id)
             ).values('knows')
-            return Response([ x['knows'] for x in data])
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        return Response()
-
+            return Response([x['knows'] for x in data])
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST, error=str(e))
