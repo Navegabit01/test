@@ -1,4 +1,5 @@
-from django.db.models import Q
+from django.db.models import Q, Value as V, CharField
+from django.db.models.functions import Concat
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters
 from rest_framework import status
@@ -35,15 +36,16 @@ class FriendsView(viewsets.ModelViewSet):
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    def profile(self, request):
-        data = {
-            "status": 0,
-            "message": "Success",
-            "data": {
-                "updatedAt": "2020-08-31 17:49:15",
-                "serverTime": "2022-03-23 15:10:11",
-                "news": ['data', 'data1']
-            }
-        }
-        return Response(data)
+    def profile_friends(self, request, profile_id=None):
+        try:
+            data = Friends.objects.annotate(
+                knows=Concat('profile1__first_name', V(' knows '), 'profile2__first_name', output_file=CharField())
+            ).filter(
+                Q(profile1=profile_id) | Q(profile2=profile_id)
+            ).values('knows')
+            return Response([ x['knows'] for x in data])
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        return Response()
 
