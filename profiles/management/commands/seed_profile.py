@@ -10,13 +10,15 @@ from profiles.models import Profile, Friends
 class Command(BaseCommand):
     """ New command to populate database"""
 
-    def get_profile_data(self):
+    @staticmethod
+    def get_profile_data():
         url = "https://randomapi.com/api/fb414b0fd22015ea575e7aa118052775"
         response = requests.get(url)
         return response.json()
 
-    def delete_object(self, object) -> None:
-        object.delete()
+    @staticmethod
+    def delete_object(object_data) -> None:
+        object_data.delete()
 
     def generate_profiles(self, options) -> None:
         for x in range(1, int(options['profiles']) + 1):
@@ -24,7 +26,8 @@ class Command(BaseCommand):
             data = Profile(id=x, **dict(data_profile['results'][0]))
             data.save()
 
-    def generate_friends(self) -> None:
+    @staticmethod
+    def generate_friends() -> None:
         profiles = Profile.objects.all()
         sentences = [x.id for x in profiles]
         rand = randint(1, profiles.count())
