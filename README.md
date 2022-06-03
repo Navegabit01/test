@@ -20,7 +20,7 @@ Install my project with pip
 
 Populate Database 
 ```bash
-  python manage.py seed_profile --profiles #{amount_of_profiles}
+  python manage.py seed_profile --profiles_total #{amount_of_profiles} >= 2
 ```    
 ## Acknowledgements
 

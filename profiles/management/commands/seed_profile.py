@@ -30,8 +30,7 @@ class Command(BaseCommand):
     def generate_friends() -> None:
         profiles = Profile.objects.all()
         sentences = [x.id for x in profiles]
-        rand = randint(1, profiles.count())
-        print(rand, sentences)
+        rand = randint(2, profiles.count())
         for _ in range(1, rand):
             profile1 = choice(sentences)
             sentences.remove(profile1)
@@ -40,7 +39,7 @@ class Command(BaseCommand):
             friend.save()
 
     def add_arguments(self, parser) -> None:
-        parser.add_argument('--profiles', help="Amount of profiles to create")
+        parser.add_argument('--profiles_total', help="Amount of profiles to create >= 2")
 
     def handle(self, *args, **options) -> None:
         try:
