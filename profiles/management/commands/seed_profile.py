@@ -21,7 +21,7 @@ class Command(BaseCommand):
         object_data.delete()
 
     def generate_profiles(self, options) -> None:
-        for x in range(1, int(options['profiles']) + 1):
+        for x in range(1, int(options['profiles_total']) + 1):
             data_profile = self.get_profile_data()
             data = Profile(id=x, **dict(data_profile['results'][0]))
             data.save()
