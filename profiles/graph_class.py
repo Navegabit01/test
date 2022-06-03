@@ -1,4 +1,3 @@
-import pprint
 from collections import defaultdict
 
 
@@ -48,7 +47,7 @@ class Graph(object):
         """
         return node1 in self._Graph and node2 in self._Graph[node1]
 
-    def BFS_SP(self, start=None, goal=None):
+    def best_path(self, start=None, goal=None):
         explored = []
 
         # Queue for traversing the

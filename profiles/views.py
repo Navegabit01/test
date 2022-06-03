@@ -34,7 +34,7 @@ class FriendsView(viewsets.ModelViewSet):
     search_fields = ['id', 'profile1__first_name', 'profile2__first_name']
     ordering_fields = '__all__'
 
-    def create(self, request):
+    def create(self, request, **kwargs):
         """
                 Function override of create with some restriction
                 (No profile are his own friend or have the same friend more than once)
@@ -49,10 +49,16 @@ class FriendsView(viewsets.ModelViewSet):
                                  profile1=request.data['profile2'],
                                  profile2=request.data['profile1'])
             ):
-                return Response(status=status.HTTP_400_BAD_REQUEST, error="This convination exist")
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    error="This convination exist"
+                )
             return super(FriendsView, self).create(request)
         except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST, error=str(e))
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                error=str(e)
+            )
 
     def profile_friends(self, request, profile_id=None):
         """
@@ -66,7 +72,10 @@ class FriendsView(viewsets.ModelViewSet):
             ).values('knows')
             return Response([x['knows'] for x in data])
         except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST, error=str(e))
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                error=str(e)
+            )
 
     def graph_shorter_ways(self, request, profile_id_1, profile_id_2):
         """
@@ -87,7 +96,7 @@ class FriendsView(viewsets.ModelViewSet):
                 ] for friend in friends
             ]
             graph = Graph(connections)
-            path = graph.BFS_SP(
+            path = graph.best_path(
                 (node1.id),
                 (node2.id),
             )

@@ -2,6 +2,7 @@ from django.db import models
 from rest_framework import status
 from rest_framework.response import Response
 
+
 # Create your models here.
 class Profile(models.Model):
     img = models.ImageField(upload_to="fotos", blank=True)
