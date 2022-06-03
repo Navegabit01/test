@@ -15,31 +15,19 @@ Install my project with pip
 
 ```bash
   pip3 install -r requirements.txt
-  python3 manange.py runserver
+  python manange.py runserver
 ```
 
-    
+Populate Database 
+```bash
+  python manage.py seed_profile --profiles #{amount_of_profiles}
+```    
 ## Acknowledgements
 
  - [Rest-Framework documentation](https://www.django-rest-framework.org/)
  - [RandomAPI](https://randomapi.com/documentation)
 ## API Reference
 
-#### Get friends items
-
-```http
-  GET friends/
-```
-
-#### Get item
-
-```http
-  GET friends/${id}/
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
 
 #### Post Profile
 
@@ -84,3 +72,20 @@ Install my project with pip
 | `city`            | `string`  | **Required**. City         |
 | `zipcode`         | `integer` | Zipcode                    |
 | `available`       | `string`  | Available                  |
+
+#### Get friends items
+
+```http
+  GET friends/
+```
+
+#### Get item
+
+```http
+  GET friends/${id}/
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of item to fetch |
+
