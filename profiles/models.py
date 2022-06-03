@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 # Create your models here.
 class Profile(models.Model):
-    img = models.ImageField(upload_to="fotos")
+    img = models.ImageField(upload_to="fotos", blank=True)
     first_name = models.CharField(max_length=30, blank=False)
     last_name = models.CharField(max_length=30, blank=False)
     phone = models.CharField(max_length=20, blank=False)
