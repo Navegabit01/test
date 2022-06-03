@@ -84,11 +84,6 @@ class Graph(object):
                     if neighbour == goal:
                         return new_path
                 explored.append(node)
-
-        # Condition when the nodes
-        # are not connected
-        print("So sorry, but a connecting" \
-              "path doesn't exist :(")
         return
 
     def __str__(self):

@@ -76,4 +76,7 @@ class FriendsView(viewsets.ModelViewSet):
             (node1.first_name+'-'+str(node1.id)),
             (node2.first_name+'-'+str(node2.id)),
         )
-        return Response(path[1:len(path)-1])
+        if path:
+            return Response(path[1:len(path)-1])
+        else:
+            return Response("Path not exist")
