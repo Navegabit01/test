@@ -73,13 +73,13 @@ Populate Database
 | `zipcode`         | `integer` | Zipcode                    |
 | `available`       | `string`  | Available                  |
 
-#### Get friends items
+#### Get Friends items
 
 ```http
   GET friends/
 ```
 
-#### Get item
+#### Get Item
 
 ```http
   GET friends/${id}/
@@ -89,3 +89,23 @@ Populate Database
 | :-------- | :------- | :-------------------------------- |
 | `id`      | `string` | **Required**. Id of item to fetch |
 
+#### Get Profile known friends
+
+```http
+  GET friends/profile/${id}/
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of profile |
+
+#### Get Profile shortest path
+
+```http
+  GET friends/profile/${id_1}/${id_2}/
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id_1`      | `string` | **Required**. Id of profile |
+| `id_2`      | `string` | **Required**. Id of profile |
