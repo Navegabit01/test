@@ -17,6 +17,6 @@ profile_patterns = [
     path(
         r"friends/profile/<int:profile_id_1>/<int:profile_id_2>/",
         views.FriendsView.as_view({'get': 'graph_shorter_ways'}),
-        name="friends_profile"
+        name="friends_profile_array"
     )
 ] + router.urls
