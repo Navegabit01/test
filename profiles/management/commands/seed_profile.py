@@ -1,4 +1,5 @@
 from random import randint
+from random import choice
 
 import requests
 
@@ -14,16 +15,29 @@ class Command(BaseCommand):
         response = requests.get(url)
         return response.json()
 
-    def delete_object(self, object)->None:
+    def delete_object(self, object) -> None:
         object.delete()
 
-    def generate_profiles(self, options):
+    def generate_profiles(self, options) -> None:
         for x in range(1, int(options['profiles']) + 1):
             data_profile = self.get_profile_data()
             data = Profile(id=x, **dict(data_profile['results'][0]))
             data.save()
 
-    def add_arguments(self, parser):
+    def generate_friends(self) -> None:
+        profiles = Profile.objects.all()
+        sentences = [x.id for x in profiles]
+        rand = randint(1, profiles.count())
+        print(rand, sentences)
+        for _ in range(1, rand):
+            profile1 = choice(sentences)
+            sentences.remove(profile1)
+            profile2 = choice(sentences)
+            friend = Friends(profile1=Profile.objects.get(pk=profile1), profile2=Profile.objects.get(pk=profile2))
+            friend.save()
+        print(Friends.objects.all().values())
+
+    def add_arguments(self, parser) -> None:
         parser.add_argument('--profiles', help="Amount of profiles to create")
 
     def handle(self, *args, **options) -> None:
@@ -31,10 +45,6 @@ class Command(BaseCommand):
             self.delete_object(Profile.objects.all())
             self.delete_object(Friends.objects.all())
             self.generate_profiles(options)
-            profiles = Profile.objects.all()
-            rand = randint(1, len(profiles) - 1)
-            print(rand, profiles.values())
-
+            self.generate_friends()
         except Exception as e:
             print("Command complete with errors: {}".format(str(e)))
-
