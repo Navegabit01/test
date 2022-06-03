@@ -35,7 +35,6 @@ class Command(BaseCommand):
             profile2 = choice(sentences)
             friend = Friends(profile1=Profile.objects.get(pk=profile1), profile2=Profile.objects.get(pk=profile2))
             friend.save()
-        print(Friends.objects.all().values())
 
     def add_arguments(self, parser) -> None:
         parser.add_argument('--profiles', help="Amount of profiles to create")
