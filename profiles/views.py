@@ -1,3 +1,5 @@
+from .graph_class import Graph
+
 from django.db.models import Q, Value, CharField
 from django.db.models.functions import Concat
 from django_filters.rest_framework import DjangoFilterBackend
@@ -52,3 +54,26 @@ class FriendsView(viewsets.ModelViewSet):
             return Response([x['knows'] for x in data])
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST, error=str(e))
+
+    def graph_shorter_ways(self, request, profile_id_1, profile_id_2):
+        friends = Friends.objects.all().values(
+            'profile1__id',
+            'profile1__first_name',
+            'profile2__id',
+            'profile2__first_name'
+        )
+        node1 = Profile.objects.filter(pk=profile_id_1).get()
+        node2 = Profile.objects.filter(pk=profile_id_2).get()
+
+        connections = [
+                [
+                    str(friend['profile1__first_name'])+"-"+str(friend['profile1__id']),
+                    str(friend['profile2__first_name'])+'-'+str(friend['profile2__id'])
+                ] for friend in friends
+            ]
+        graph = Graph(connections)
+        path = graph.BFS_SP(
+            (node1.first_name+'-'+str(node1.id)),
+            (node2.first_name+'-'+str(node2.id)),
+        )
+        return Response(path[1:len(path)-1])
