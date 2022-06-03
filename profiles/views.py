@@ -56,27 +56,31 @@ class FriendsView(viewsets.ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST, error=str(e))
 
     def graph_shorter_ways(self, request, profile_id_1, profile_id_2):
-        friends = Friends.objects.all().values(
-            'profile1__id',
-            'profile1__first_name',
-            'profile2__id',
-            'profile2__first_name'
-        )
-        node1 = Profile.objects.filter(pk=profile_id_1).get()
-        node2 = Profile.objects.filter(pk=profile_id_2).get()
+        try:
+            friends = Friends.objects.all().values(
+                'profile1__id',
+                'profile1__first_name',
+                'profile2__id',
+                'profile2__first_name'
+            )
+            node1 = Profile.objects.filter(pk=profile_id_1).get()
+            node2 = Profile.objects.filter(pk=profile_id_2).get()
 
-        connections = [
+            connections = [
                 [
-                    str(friend['profile1__first_name'])+"-"+str(friend['profile1__id']),
-                    str(friend['profile2__first_name'])+'-'+str(friend['profile2__id'])
+                    str(friend['profile1__first_name']) + "-" + str(friend['profile1__id']),
+                    str(friend['profile2__first_name']) + '-' + str(friend['profile2__id'])
                 ] for friend in friends
             ]
-        graph = Graph(connections)
-        path = graph.BFS_SP(
-            (node1.first_name+'-'+str(node1.id)),
-            (node2.first_name+'-'+str(node2.id)),
-        )
-        if path:
-            return Response(path[1:len(path)-1])
-        else:
-            return Response("Path not exist")
+            graph = Graph(connections)
+            path = graph.BFS_SP(
+                (node1.first_name + '-' + str(node1.id)),
+                (node2.first_name + '-' + str(node2.id)),
+            )
+            if path:
+                return Response(path[1:len(path) - 1])
+            else:
+                return Response("Path not exist")
+        except:
+            Response(status=status.HTTP_400_BAD_REQUEST)
+
