@@ -22,7 +22,7 @@ Install my project with pip
 ## Acknowledgements
 
  - [Rest-Framework documentation](https://www.django-rest-framework.org/)
- 
+ - [RandomAPI](https://randomapi.com/documentation)
 ## API Reference
 
 #### Get friends items
