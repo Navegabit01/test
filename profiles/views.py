@@ -12,6 +12,9 @@ from .models import Profile, Friends
 
 
 class ProfileView(viewsets.ModelViewSet):
+    """
+            Class Profile (Data of persons)
+        """
     queryset = Profile.objects.all()
     serializer_class = SerializerProfiles
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
@@ -21,6 +24,9 @@ class ProfileView(viewsets.ModelViewSet):
 
 
 class FriendsView(viewsets.ModelViewSet):
+    """
+            Class Friends (relations of persons)
+        """
     queryset = Friends.objects.all()
     serializer_class = SerializerFriends
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
@@ -29,6 +35,10 @@ class FriendsView(viewsets.ModelViewSet):
     ordering_fields = '__all__'
 
     def create(self, request):
+        """
+                Function override of create with some restriction
+                (No profile are his own friend or have the same friend more than once)
+            """
         try:
             if request.data['profile1'] == request.data['profile2'] or Friends.objects.filter(
                     Q(
@@ -45,6 +55,9 @@ class FriendsView(viewsets.ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST, error=str(e))
 
     def profile_friends(self, request, profile_id=None):
+        """
+            Return the friends of the Profile selected
+            """
         try:
             data = Friends.objects.annotate(
                 knows=Concat('profile1__first_name', Value(' knows '), 'profile2__first_name', output_file=CharField())
@@ -56,26 +69,27 @@ class FriendsView(viewsets.ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST, error=str(e))
 
     def graph_shorter_ways(self, request, profile_id_1, profile_id_2):
+        """
+           Graph shortest ways between 2 profiles
+           """
         try:
             friends = Friends.objects.all().values(
                 'profile1__id',
-                'profile1__first_name',
                 'profile2__id',
-                'profile2__first_name'
             )
             node1 = Profile.objects.filter(pk=profile_id_1).get()
             node2 = Profile.objects.filter(pk=profile_id_2).get()
 
             connections = [
                 [
-                    str(friend['profile1__first_name']) + "-" + str(friend['profile1__id']),
-                    str(friend['profile2__first_name']) + '-' + str(friend['profile2__id'])
+                    friend['profile1__id'],
+                    friend['profile2__id']
                 ] for friend in friends
             ]
             graph = Graph(connections)
             path = graph.BFS_SP(
-                (node1.first_name + '-' + str(node1.id)),
-                (node2.first_name + '-' + str(node2.id)),
+                (node1.id),
+                (node2.id),
             )
             if path:
                 return Response(path[1:len(path) - 1])

@@ -1,16 +1,17 @@
-from django.urls import reverse, resolve
+from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase, APISimpleTestCase
+from rest_framework.test import APITestCase
 
 
 class FriendsViewTest(APITestCase):
 
     def setUp(self) -> None:
-        '''
+        """
         Function set data for the test
         :return: None
-        '''
+        """
         self.reverse_friends_profile_url = reverse("friends_profile", args=[1])
+        self.reverse_friends_array_url = reverse("friends_profile_array", args=[1, 3])
         self.create_profile_url = reverse("Profile-list")
         self.create_friends_url = reverse("Friends-list")
         for x in range(1, 4):
@@ -34,10 +35,11 @@ class FriendsViewTest(APITestCase):
 
 
     def test_create_function(self) -> None:
-        '''
+        """
         Test for create function
         :return: None
-        '''
+        """
+
         data = {
             "first_name": "Luis Alberto",
             "last_name": "Vidal Mesa",
@@ -60,11 +62,17 @@ class FriendsViewTest(APITestCase):
         self.assertEqual(response_create_img_error.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_profile_friends_function(self) -> None:
-        '''
+        """
         Function for testing known friends of a given profile
         :return:
-        '''
+        """
         response = self.client.get(self.reverse_friends_profile_url, arg=[1])
         self.assertEqual(len(response.data), 1)
 
-
+    def test_profile_friends_array(self) -> None:
+        """
+        Function for testing the shortest route between 2 friends relations
+        :return:
+        """
+        response = self.client.get(self.reverse_friends_array_url)
+        self.assertEqual(response.json(), [2])
