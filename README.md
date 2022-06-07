@@ -15,6 +15,7 @@ Install my project with pip
 
 ```bash
   pip3 install -r requirements.txt
+  python migrate
   python manange.py runserver
 ```
 
